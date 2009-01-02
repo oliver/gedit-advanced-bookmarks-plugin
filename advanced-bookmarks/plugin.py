@@ -49,7 +49,8 @@ class AdvancedBookmarksPlugin(gedit.Plugin):
         
         # Check if configuration file does not exists
         if not os.path.exists(conf_path):
-            # Create configuration file
+            # Create configuration file (and directory)
+            os.makedirs( os.path.dirname(conf_path) )
             conf_file = file(conf_path, "wt")
             conf_file.close()
             
