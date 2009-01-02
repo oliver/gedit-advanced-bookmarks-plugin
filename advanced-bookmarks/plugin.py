@@ -21,6 +21,7 @@
 import pygtk
 pygtk.require("2.0")
 import gtk
+import gtk.glade
 import gedit
 import time
 import os
