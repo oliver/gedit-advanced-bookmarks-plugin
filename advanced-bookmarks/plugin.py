@@ -43,33 +43,43 @@ class AdvancedBookmarksPlugin(gedit.Plugin):
         gedit.Plugin.__init__(self)
         
         self._instances = {}
+        
+        self._config = None
+        self._bookmarks = None
 
         # Setup configuration file path
         conf_path = os.path.join(os.path.expanduser("~/.gnome2/gedit/plugins/"), "advanced-bookmarks/plugin.conf")
         
-        # Check if configuration file does not exists
-        if not os.path.exists(conf_path):
-            # Create configuration file (and directory)
-            os.makedirs( os.path.dirname(conf_path) )
-            conf_file = file(conf_path, "wt")
-            conf_file.close()
-            
-        # Create configuration dictionary
-        self.read_config(conf_path)
+        try:
+            # Check if configuration file does not exists
+            if not os.path.exists(conf_path):
+                # Create configuration file (and directory)
+                os.makedirs( os.path.dirname(conf_path) )
+                conf_file = file(conf_path, "wt")
+                conf_file.close()
 
-        # Create bookmark list
-        self._bookmarks = bookmarks.bookmark_list(self._config)
+            # Create configuration dictionary
+            self.read_config(conf_path)
+
+            # Create bookmark list
+            self._bookmarks = bookmarks.bookmark_list(self._config)
+
+        except (IOError, OSError), e:
+            print "could not read config file (%s)" % e
         
     def activate(self, window):
         # Create window helper for an instance
-        self._instances[window] = window_helper.window_helper(self, window, self._bookmarks, self._config)
+        if self._bookmarks and self._config:
+            self._instances[window] = window_helper.window_helper(self, window, self._bookmarks, self._config)
         
     def deactivate(self, window):
-        self._instances[window].deactivate()
-        del self._instances[window]
+        if self._instances.has_key(window):
+            self._instances[window].deactivate()
+            del self._instances[window]
         
     def update_ui(self, window):
-        self._instances[window].update_ui()
+        if self._instances.has_key(window):
+            self._instances[window].update_ui()
                         
     def create_configure_dialog(self):
         # Create configuration dialog
