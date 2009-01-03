@@ -153,6 +153,12 @@ class bookmark_list(object):
             return True
 
     def update(self, uri, offset, cur_line, end_line):
+        """
+        Moves all bookmarks between cur_line and end_line (by updating the line
+        number according to offset).
+        If offset > 0: lines have been deleted.
+        If offset < 0: lines have been inserted.
+        """
         if self._list.has_key(uri):
             iters = {}
             
