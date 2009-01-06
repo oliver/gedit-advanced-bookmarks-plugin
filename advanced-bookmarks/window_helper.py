@@ -77,7 +77,10 @@ class window_helper:
         self._tree.set_enable_tree_lines(True)
         self._tree.set_search_column(1)
         self._tree.set_rules_hint(True)
-        self._tree.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_BOTH)
+        
+        # apparently set_grid_lines() is broken in GTK < 2.11:
+        if (gtk.gtk_version[0] * 10000 + gtk.gtk_version[1] * 100 + gtk.gtk_version[2] * 1) >= 21100:
+            self._tree.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_BOTH)
         
         # Create bottom pane
         self._pane = gtk.ScrolledWindow()
