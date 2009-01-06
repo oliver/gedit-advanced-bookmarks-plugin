@@ -118,8 +118,12 @@ class AdvancedBookmarksPlugin(gedit.Plugin):
             highlight = self._dlg_config_glade.get_widget("chk_highlight").get_active()
             self._config.set("common", "highlighting", highlight and "on" or "off")
             
-            color = self._dlg_config_glade.get_widget("btn_color").get_color().to_string()
-            self._config.set("common", "highlight_color", color)
+            color = self._dlg_config_glade.get_widget("btn_color").get_color()
+            if hasattr(color, "to_string"):
+                colorStr = color.to_string()
+            else:
+                colorStr = "#%x%x%x" % (color.red, color.green, color.blue)
+            self._config.set("common", "highlight_color", colorStr)
             
             self.write_config()
             
