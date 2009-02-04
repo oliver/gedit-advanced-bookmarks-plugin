@@ -132,16 +132,16 @@ class window_helper:
         self._btn_vbox.show_all()
         
         # Create layout table
-        table = gtk.Table(2, 1)
+        self._table = gtk.Table(2, 1)
 
-        table.attach(self._pane,    0, 1, 0, 1)
-        table.attach(self._btn_hbox, 1, 2, 0, 1, 0)
+        self._table.attach(self._pane,    0, 1, 0, 1)
+        self._table.attach(self._btn_hbox, 1, 2, 0, 1, 0)
 
-        table.show_all()
+        self._table.show_all()
 
         # Install layout table into bottom pane
         pane = window.get_bottom_panel()
-        pane.add_item(table, _('Bookmarks'), self._icon)
+        pane.add_item(self._table, _('Bookmarks'), self._icon)
 
         # Setup handlers for all documents
         for doc in window.get_documents():
@@ -153,9 +153,11 @@ class window_helper:
         window.connect("active-tab-changed", self._on_tab_changed)
     
     def deactivate(self):
-        # Remove any installed menu items
+        # Remove any installed menu items and panel tabs
         self._remove_menu()
+        self._window.get_bottom_panel().remove_item(self._table)
 
+        self._table = None
         self._window = None
         self._plugin = None
         self._action_group = None
