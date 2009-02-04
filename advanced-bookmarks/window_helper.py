@@ -588,7 +588,8 @@ class window_helper:
         
     def _on_tree_focused(self, tree, direction):
         view = self._window.get_active_view()
-        view.grab_focus()
+        if view:
+            view.grab_focus()
         
     def _render_comment_callback(self, column, cell_renderer, tree_model, iter):
         doc = self._window.get_active_document()
